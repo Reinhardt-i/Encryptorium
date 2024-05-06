@@ -33,14 +33,39 @@ def decrypt_substitution_cipher(encrypted_text):
     for i, (char, count) in enumerate(freq_list):
         cipher_to_eng[char] = eng_freq_order[i % len(eng_freq_order)]
     
-    
+
     decrypted_text = ''.join(cipher_to_eng.get(char, char) for char in encrypted_text)
     
     return decrypted_text, cipher_to_eng
 
 
 
-encrypted_text = cipher_sub_1
+encrypted_text = cipher_sub_2
 decrypted_text, key = decrypt_substitution_cipher(encrypted_text)
 print("Decryption Key:", key)
 print("Decrypted Text:", decrypted_text)
+
+
+
+
+# DEBUGG
+
+def interactive_decrypt(encrypted_text, cipher_to_eng):
+    decrypted_text = ''.join(cipher_to_eng.get(char, char) for char in encrypted_text)
+    print("Decrypted Text:", decrypted_text)
+    while True:
+        print("Current Key:", cipher_to_eng)
+        change = input("Enter letter to change and new letter (e.g., 'x:e'): ")
+        if change == "done":
+            break
+        old, new = change.split(':')
+        for key, value in cipher_to_eng.items():
+            if value == old:
+                cipher_to_eng[key] = new
+        decrypted_text = ''.join(cipher_to_eng.get(char, char) for char in encrypted_text)
+        print("Updated Text:", decrypted_text)
+
+
+cipher_to_eng = {'i': 'e', 'd': 't', 'c': 'a', 'p': 'o', 'a': 'i', 'f': 'n', 'r': 's', 'e': 'h', 'k': 'r', 'g': 'd', 'n': 'l', 'q': 'c', 'v': 'u', 'u': 'm', 't': 'w', 'o': 'f', 'x': 'g', 'w': 'y', 'm': 'p', 'h': 'b', 'l': 'v', 'j': 'k', 's': 'j'}
+encrypted_text = "your encrypted text here"
+interactive_decrypt(encrypted_text, cipher_to_eng)
