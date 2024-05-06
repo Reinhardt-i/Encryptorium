@@ -39,7 +39,7 @@ This project is licensed under the MIT License - see the `LICENSE` file for deta
 
 ### Contact 📬
 
-- Abraar - []{the.abraar@outlook.com}
-- Project Link: [Encryptorium]{https://github.com/Reinhardt-i/Encryptorium}
+- Abraar - [the.abraar](the.abraar@outlook.com)
+- Project Link: [Encryptorium](https://github.com/Reinhardt-i/Encryptorium)
 
 ---
