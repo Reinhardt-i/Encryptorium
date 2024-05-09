@@ -1,0 +1,1 @@
+HMAC-MD5(night.txt)= 46caa6a5d48e2c9ad2b623c6c3e40b8a

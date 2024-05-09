@@ -44,7 +44,7 @@ def decrypt_caesar_cipher_w_allpossible_shifts(ciphertext: str) -> str:
         str: The decrypted text for all shifts.
     """
 
-    ans = ""
+    ans = "ALL POSSIBLE SHIFTS -\n"
 
     for i in range (0, 26):
         ans += f"For i = {i}, Decrypted caesar : {decrypt_caesar_cipher(ciphertext, i)} \n"
@@ -57,10 +57,10 @@ if __name__ == '__main__':
 
     cipher_caesar_to_break = "odroboewscdrolocdcwkbdmyxdbkmdzvkdpybwyeddrobo"
 
-    # print(decrypt_caesar_cipher_w_allpossible_shifts(cipher_caesar_to_break))
+    print(decrypt_caesar_cipher_w_allpossible_shifts(cipher_caesar_to_break))
     
     # By Running the line above, found shift = 10 to be meaningful, so ans is -
-    
+    print("THE CORRECT ANSWER : \n\n")
     print(f"The decrypted form of {cipher_caesar_to_break} "
         f"is -\n {decrypt_caesar_cipher(cipher_caesar_to_break, 10)}\n"
         f"[found by applying shift = 10]")

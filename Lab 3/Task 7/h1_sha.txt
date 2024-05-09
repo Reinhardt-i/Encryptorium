@@ -1,0 +1,1 @@
+HMAC-SHA2-256(night.txt)= fe70754ed6a845ba1ce32870bb6f20cc00fb28c114a6db6706af7defa10354ed
