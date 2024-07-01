@@ -1,12 +1,3 @@
-"""
-STUFF:
-    - https://medium.com/asecuritysite-when-bob-met-alice/python-cryptography-and-hazmat-105aaafc05a9
-    - https://cryptography.io/en/latest/hazmat/primitives/asymmetric/
-
-"""
-
-
-
 import os
 from time import time
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
@@ -30,7 +21,9 @@ def aes_encrypt_decrypt(operation, key, data, mode='ECB'):
 
 
 def generate_rsa_keys():
-    return rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048, backend=default_backend())
+    public_key = private_key.public_key()
+    return private_key, public_key
 
 
 def rsa_encrypt_decrypt(operation, key, data):
@@ -40,10 +33,12 @@ def rsa_encrypt_decrypt(operation, key, data):
         return key.decrypt(data, padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None))
 
 
-def rsa_sign_verify(operation, private_key, data):
-    signer = private_key.signer(padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), hashes.SHA256())
-    signer.update(data)
-    return signer.finalize()
+def rsa_sign_verify(operation, private_key, public_key, data):
+    if operation == 'sign':
+        signature = private_key.sign(data, padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), hashes.SHA256())
+        return signature
+    else:
+        public_key.verify(data, padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH), hashes.SHA256())
 
 
 def sha256_hash(data):
@@ -75,13 +70,24 @@ def main():
         encrypted_data, enc_time = measure_time(aes_encrypt_decrypt, 'encrypt', key, data, mode)
         print(f"Encrypted: {encrypted_data}, Time: {enc_time}s")
         decrypted_data, dec_time = measure_time(aes_encrypt_decrypt, 'decrypt', key, encrypted_data, mode)
-        print(f"Decrypted: {decrypted_data}, Time: {dec_time}s")
+        print(f"Decrypted: {decrypted_data.decode()}, Time: {dec_time}s")
     elif choice == '2':
-        # RSA operations and timing...
-        pass
+        private_key, public_key = generate_rsa_keys()
+        data = input("Enter data to encrypt: ").encode()
+        encrypted_data, enc_time = measure_time(rsa_encrypt_decrypt, 'encrypt', public_key, data)
+        print(f"Encrypted: {encrypted_data}, Time: {enc_time}s")
+        decrypted_data, dec_time = measure_time(rsa_encrypt_decrypt, 'decrypt', private_key, encrypted_data)
+        print(f"Decrypted: {decrypted_data.decode()}, Time: {dec_time}s")
     elif choice == '3':
-        # RSA signature and verification...
-        pass
+        private_key, public_key = generate_rsa_keys()
+        data = input("Enter data to sign: ").encode()
+        signature, sign_time = measure_time(rsa_sign_verify, 'sign', private_key, public_key, data)
+        print(f"Signature: {signature}, Time: {sign_time}s")
+        try:
+            rsa_sign_verify('verify', private_key, public_key, signature)
+            print("Verification successful")
+        except Exception as e:
+            print("Verification failed")
     elif choice == '4':
         data = input("Enter data for hashing: ").encode()
         hash_result, hash_time = measure_time(sha256_hash, data)
